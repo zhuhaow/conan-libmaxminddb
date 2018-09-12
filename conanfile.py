@@ -1,4 +1,4 @@
-from conans import ConanFile, tools, AutoToolsBuildEnvironment
+from conans import ConanFile, tools, AutoToolsBuildEnvironment, MSBuild
 
 
 class LibmaxminddbConan(ConanFile):
@@ -17,26 +17,32 @@ class LibmaxminddbConan(ConanFile):
 
     def build(self):
         with tools.chdir("libmaxminddb"):
-            if self.settings.os != "Windows":
+            if self.settings.compiler != "Visual Studio":
                 self.run("autoreconf -fiv", run_environment=True)
 
-                args = ['--prefix=%s' % self.package_folder]
+                args = ["--prefix=%s" % self.package_folder]
                 if self.options.shared:
-                    args.extend(['--disable-static', '--enable-shared'])
+                    args.extend(["--disable-static", "--enable-shared"])
                 else:
-                    args.extend(['--disable-shared', '--enable-static'])
-                if self.settings.build_type == 'Debug':
-                    args.append('--enable-debug')
+                    args.extend(["--disable-shared", "--enable-static"])
+                if self.settings.build_type == "Debug":
+                    args.append("--enable-debug")
                 if self.options.fPIC:
-                    args.append('--with-pic')
+                    args.append("--with-pic")
 
                 autotools = AutoToolsBuildEnvironment(self)
                 autotools.configure(args=args)
                 autotools.make()
                 autotools.install()
             else:
-                raise Exception("Windows is not supported.")
+                with tools.vcvars(self.settings):
+                    sdk = tools.get_env("WindowsSDKVersion").strip(" \\")
+
+                msbuild = MSBuild(self)
+                msbuild.build(
+                    "projects/VS12/libmaxminddb.sln",
+                    properties={"WindowsTargetPlatformVersion": sdk},
+                )
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
-
