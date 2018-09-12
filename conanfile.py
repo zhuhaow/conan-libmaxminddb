@@ -38,12 +38,14 @@ class LibmaxminddbConan(ConanFile):
                 autotools.install()
             else:
                 with tools.vcvars(self.settings):
-                    sdk = tools.get_env("WindowsSDKVersion").strip(" \\")
+                    sdk = tools.get_env("WindowsSDKVersion")
+                    if sdk:
+                        sdk = sdk.strip(" \\")
 
                 msbuild = MSBuild(self)
                 msbuild.build(
                     "projects/VS12/libmaxminddb.sln",
-                    properties={"WindowsTargetPlatformVersion": sdk},
+                    properties={"WindowsTargetPlatformVersion": sdk} if sdk else {},
                 )
 
     def package(self):
