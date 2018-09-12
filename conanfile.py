@@ -33,6 +33,8 @@ class LibmaxminddbConan(ConanFile):
                 autotools = AutoToolsBuildEnvironment(self)
                 autotools.configure(args=args)
                 autotools.make()
+                if not tools.cross_building(self.settings):
+                    self.run("make check")
                 autotools.install()
             else:
                 with tools.vcvars(self.settings):
@@ -43,6 +45,14 @@ class LibmaxminddbConan(ConanFile):
                     "projects/VS12/libmaxminddb.sln",
                     properties={"WindowsTargetPlatformVersion": sdk},
                 )
+
+    def package(self):
+        self.copy("*.h", src="libmaxminddb/include", dst="include")
+        self.copy("*libmaxminddb.lib", dst="lib", keep_path=False)
+        self.copy("*.dll", dst="bin", keep_path=False)
+        self.copy("*.so", dst="lib", keep_path=False)
+        self.copy("*.dylib", dst="lib", keep_path=False)
+        self.copy("*.a", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
