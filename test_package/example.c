@@ -15,5 +15,7 @@ int main() {
     exit(1);
   }
 
+  printf("Test success");
+
   return 0;
 }
