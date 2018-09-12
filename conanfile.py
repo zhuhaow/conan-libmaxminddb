@@ -46,7 +46,7 @@ class LibmaxminddbConan(ConanFile):
                 msbuild.build(
                     "projects/VS12/libmaxminddb.sln",
                     properties={"WindowsTargetPlatformVersion": sdk} if sdk else {},
-                    arch="Win32" if self.settings.arch == "x86" else None
+                    platforms={"x86": "Win32"},
                 )
 
     def package(self):
