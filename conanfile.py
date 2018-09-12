@@ -49,10 +49,10 @@ class LibmaxminddbConan(ConanFile):
     def package(self):
         self.copy("*.h", src="libmaxminddb/include", dst="include")
         self.copy("*libmaxminddb.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.dylib", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
+        self.copy("*libmaxminddb.dll", dst="bin", keep_path=False)
+        self.copy("*libmaxminddb.so", dst="lib", keep_path=False)
+        self.copy("*libmaxminddb.dylib", dst="lib", keep_path=False)
+        self.copy("*libmaxminddb.a", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
