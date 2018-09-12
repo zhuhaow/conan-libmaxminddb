@@ -1,4 +1,4 @@
-#include <libmaxminddb.h>
+#include <maxminddb.h>
 #include <stdio.h>
 #include <stdlib.h>
 
