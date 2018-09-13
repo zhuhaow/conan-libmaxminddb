@@ -29,6 +29,10 @@ class LibmaxminddbConan(ConanFile):
                     args.append("--enable-debug")
                 if self.options.fPIC:
                     args.append("--with-pic")
+                else:
+                    args.append("--without-pic")
+                if tools.cross_building(self.settings):
+                    args.append("--disable-tests")
 
                 autotools = AutoToolsBuildEnvironment(self)
                 autotools.configure(args=args)
