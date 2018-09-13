@@ -6,9 +6,9 @@ conan_basic_setup()
 
 if (WIN32)
   SET(LIBS ${CONAN_LIBS} ws2_32)
-else
+else()
   SET(LIBS ${CONAN_LIBS})
-endif
+endif()
 
 add_executable(example example.c)
 target_link_libraries(example ${LIBS})
