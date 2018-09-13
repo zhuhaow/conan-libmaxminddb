@@ -37,6 +37,12 @@ class LibmaxminddbConan(ConanFile):
                     self.run("make check")
                 autotools.install()
             else:
+                if self.options["shared"]:
+                    self.output.warning(
+                        "libmaxminddb does not support building dynamic library yet, building static library instead"
+                    )
+                    self.options["shared"] = False
+
                 with tools.vcvars(self.settings):
                     sdk = tools.get_env("WindowsSDKVersion")
                     if sdk:
