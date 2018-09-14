@@ -31,13 +31,13 @@ class LibmaxminddbConan(ConanFile):
                     args.append("--with-pic")
                 else:
                     args.append("--without-pic")
-                if tools.cross_building(self.settings):
+                if not tools.get_env("CONAN_RUN_TESTS", True):
                     args.append("--disable-tests")
 
                 autotools = AutoToolsBuildEnvironment(self)
                 autotools.configure(args=args)
                 autotools.make()
-                if not tools.cross_building(self.settings):
+                if tools.get_env("CONAN_RUN_TESTS", True):
                     self.run("make check")
                 autotools.install()
             else:
