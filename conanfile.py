@@ -11,6 +11,11 @@ class LibmaxminddbConan(ConanFile):
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = ("shared=False", "fPIC=True")
 
+    def configure(self):
+        del self.settings.compiler.libcxx
+        if self.settings.compiler == 'Visual Studio':
+            del self.options.fPIC
+
     def source(self):
         self.run("git clone --recursive https://github.com/maxmind/libmaxminddb")
         self.run("cd libmaxminddb && git checkout 1.3.2")
